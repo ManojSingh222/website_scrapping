@@ -5,12 +5,12 @@ def get_headlines(query):
     googlenews = GoogleNews(lang='en')
     googlenews.search(query)
     results = googlenews.results()
-    return [item['title'] for item in results]
+    return [(item['title'], item['media'], item['link'], item['date']) for item in results]
 
-def analyze_sentiments(headlines):
+def analyze_sentiments(headline_tuples):
     results = []
-    for text in headlines:
-        blob = TextBlob(text)
+    for title, source, link, date in headline_tuples:
+        blob = TextBlob(title)
         polarity = blob.sentiment.polarity
         if polarity > 0:
             sentiment = "Positive"
@@ -18,5 +18,5 @@ def analyze_sentiments(headlines):
             sentiment = "Negative"
         else:
             sentiment = "Neutral"
-        results.append((text, sentiment))
+        results.append((title, sentiment, polarity, source, link, date))
     return results
